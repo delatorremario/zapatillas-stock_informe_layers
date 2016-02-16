@@ -7,9 +7,44 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
 
+    <link href="Content/bootstrap.css" rel="stylesheet" />
     <script src="Scripts/jquery-1.9.1.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="Scripts/alertify.min.js"></script>
+
+      <script type="text/javascript">
+          $(function () {
+              $("#finicio"
+               ).datepicker();
+          });
+
+          function PrintElem(elem) {
+              Popup($(elem).html());
+          }
+
+          function Popup(data) {
+              var mywindow = window.open('', 'Imprimir', 'height=400,width=600');
+              mywindow.document.write('<html><head>');
+              /*optional stylesheet*/ //dow.document.write('<link rel="stylesheet" href="factura.css" type="text/css" />');
+              mywindow.document.write('<link href="Content/bootstrap.css" rel="stylesheet" />');
+              mywindow.document.write('<script src="Scripts/jquery-1.9.1.min.js"/>');
+              mywindow.document.write('<script src="Scripts/bootstrap.min.js"/>');
+   
+
+              mywindow.document.write('</head><body >');
+              mywindow.document.write(data);
+              mywindow.document.write('</body></html>');
+
+              mywindow.print();
+              mywindow.close();
+
+              return true;
+          }
+
+  </script>
+
+
+
 </head>
 <body>
 
@@ -43,7 +78,9 @@
                                         <asp:Label ID="UploadStatusLabel" runat="server"></asp:Label>
                                     </div>
                                     <div class="row">
-                                        <asp:Button CssClass="btn btn-default" ID="btProcesar" runat="server" Text="Procesar" UseSubmitBehavior="False" OnClick="btProcesar_Click" />
+                                        <asp:TextBox ID="finicio" runat="server" Text="01/01/2014"></asp:TextBox>
+                                        <asp:TextBox ID="ffin" runat="server" Text="31/01/2014"></asp:TextBox>
+                                        <asp:Button class="btn btn-default" ID="btProcesar" runat="server" Text="Procesar" UseSubmitBehavior="False" OnClick="btProcesar_Click" />
                                     </div>
 
                                     <asp:UpdateProgress ID="UpdateProgress1" runat="server" 
@@ -53,17 +90,14 @@
                                             <img src="../../../progreso.gif" align="middle" alt="."/>
                                         </ProgressTemplate>
                                     </asp:UpdateProgress>
-                                    <div>
-                                        <asp:GridView ID="GridView1" runat="server">
-                                                <Columns>
-                                                    <asp:TemplateField>
-                                                        <ItemTemplate>
-                                                            <asp:Label ID="lbMensajeRow" runat="server"></asp:Label>
-                                                        </ItemTemplate>
-                                                    </asp:TemplateField>
-                                                </Columns>
-                                    </asp:GridView>
+
+
+                                    <input style="padding-top:10px" type="button" value="Imprimir" onclick="PrintElem('#informe')" />
+                                    <div id="informe" runat="server">
+
                                     </div>
+
+                                    
                                 </div>
 
                                 

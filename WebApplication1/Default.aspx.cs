@@ -146,14 +146,36 @@ namespace WebApplication1
 
                  Debug.WriteLine(arr.ToString());
 
-                 DateTime fini = DateTime.Parse ( "01/01/2015");
-                 DateTime ffin = Convert.ToDateTime ("31/01/2015");
+                 DateTime fini = DateTime.Parse (this.finicio.Text);
+                 DateTime ffin = Convert.ToDateTime (this.ffin.Text);
                  string conexionStr = rbConexiones.SelectedValue;
                  consultaBss consultaBss = new consultaBss(conexionStr);
                  List<Resumen> miResumen = consultaBss.consultarResumen(fini, ffin, arr);
 
-                 GridView1.DataSource = miResumen;
-                 GridView1.DataBind();
+                 string html = "";
+
+                 foreach (Resumen r in miResumen)
+                 {   html+="<div class='row'>";
+                 html += "<div class='col-sm-2'><strong>" + r.codigo + "</strong></div><div class='col-sm-10'>" + r.articulo + "</div>";
+                 decimal suma = 0;
+                     foreach (ResumenDetalle rd in r.detalle) { 
+
+                         html += "<div class='row'>";
+                         html += "<div class='col-sm-1'>"+  rd.fecha.ToShortDateString()   +"</div>";
+                         html += "<div class='col-sm-2'>"+  rd.movimiento   +"</div>";
+                         html += "<div class='col-sm-2'>"+  rd.numero   +"</div>";
+                         html += "<div class='col-sm-1'>"+  rd.tipo   +"</div>";
+                         html += "<div class='col-sm-1'>"+  rd.cantidad.ToString("N0")   +"</div>";
+                         html += "<div class='col-sm-1'>"+  ( suma+=rd.cantidad ).ToString("N0")   +"</div>";
+                         html += "</div>";
+                        
+                     }
+                     html += "</div>";
+                 }
+
+                 this.informe.InnerHtml = html;
+
+               
 
                 /*foreach (DataRow dr in ds.Tables[0].Rows)
                 {

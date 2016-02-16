@@ -76,6 +76,24 @@ namespace WebApplication1 {
         protected global::System.Web.UI.WebControls.Label UploadStatusLabel;
         
         /// <summary>
+        /// Control finicio.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox finicio;
+        
+        /// <summary>
+        /// Control ffin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox ffin;
+        
+        /// <summary>
         /// Control btProcesar.
         /// </summary>
         /// <remarks>
@@ -94,12 +112,12 @@ namespace WebApplication1 {
         protected global::System.Web.UI.UpdateProgress UpdateProgress1;
         
         /// <summary>
-        /// Control GridView1.
+        /// Control informe.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridView1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl informe;
     }
 }
