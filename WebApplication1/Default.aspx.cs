@@ -22,9 +22,10 @@ namespace WebApplication1
                 if (!IsPostBack)
                 {
                     var conexs = ConfigurationManager.ConnectionStrings;
-                    foreach (var c in conexs)
+                    foreach (ConnectionStringSettings c in conexs)
                     {
-                        rbConexiones.Items.Add(c.ToString());
+                        ListItem item = new ListItem(c.Name,c.ToString());
+                        rbConexiones.Items.Add(item);
                     }
                 }
                 
@@ -35,7 +36,7 @@ namespace WebApplication1
                 string myScript2 = "alertify.error('message." + ex.Message + "')";
                 ScriptManager.RegisterClientScriptBlock(Page, Page.GetType(),
                                 Guid.NewGuid().ToString(), myScript2, true);
-                return;
+                //return;
                 //throw;
             }
         }
@@ -79,7 +80,9 @@ namespace WebApplication1
 
                         //string archivo = savePath; // 'Server.MapPath("agenda.xlsx") 'Asignamos la ruta
                         Session["archivo"]=savePath;
-                        
+
+                        movimientos.InnerHtml = "";
+
                         //GridView1.DataSource = LeerArchivoExcel(archivo); //' Invocamos a la funcion LeerArchivoExcel, la cual devolverá un Dataset y sera el origen de los datos para el GridView
                         //GridView1.DataBind();
                         //UploadStatusLabel.Text = "Se encontraron " + GridView1.Rows.Count + " registros - " + this.UploadStatusLabel.Text;
@@ -99,7 +102,7 @@ namespace WebApplication1
                 string myScript2 = "alertify.error('message."+ex.Message+"')";
                 ScriptManager.RegisterClientScriptBlock(Page, Page.GetType(),
                                 Guid.NewGuid().ToString(), myScript2, true);
-                return; 
+                //return; 
                 //throw;
             }
         }
@@ -149,6 +152,7 @@ namespace WebApplication1
                  DateTime fini = DateTime.Parse (this.finicio.Text);
                  DateTime ffin = Convert.ToDateTime (this.ffin.Text);
                  string conexionStr = rbConexiones.SelectedValue;
+                 lbSeleccionada.Text = rbConexiones.SelectedItem.ToString();
                  consultaBss consultaBss = new consultaBss(conexionStr);
                  List<Resumen> miResumen = consultaBss.consultarResumen(fini, ffin, arr);
 
@@ -156,24 +160,27 @@ namespace WebApplication1
 
                  foreach (Resumen r in miResumen)
                  {   html+="<div class='row'>";
-                 html += "<div class='col-sm-2'><strong>" + r.codigo + "</strong></div><div class='col-sm-10'>" + r.articulo + "</div>";
-                 decimal suma = 0;
-                     foreach (ResumenDetalle rd in r.detalle) { 
+                    html += "<div class='col-sm-2'><strong>" + r.codigo + "</strong></div><div class='col-sm-10'>" + r.articulo + "</div>";
+                    html += "</div>";
+                    decimal suma = 0;
+                    html += "<table border='0'>";
+                     foreach (ResumenDetalle rd in r.detalle) {
 
-                         html += "<div class='row'>";
-                         html += "<div class='col-sm-1'>"+  rd.fecha.ToShortDateString()   +"</div>";
-                         html += "<div class='col-sm-2'>"+  rd.movimiento   +"</div>";
-                         html += "<div class='col-sm-2'>"+  rd.numero   +"</div>";
-                         html += "<div class='col-sm-1'>"+  rd.tipo   +"</div>";
-                         html += "<div class='col-sm-1'>"+  rd.cantidad.ToString("N0")   +"</div>";
-                         html += "<div class='col-sm-1'>"+  ( suma+=rd.cantidad ).ToString("N0")   +"</div>";
-                         html += "</div>";
+                         html += "<tr>";
+                         html += "<td style='width: 100px'>"+  rd.fecha.ToShortDateString()   +"</div>";
+                         html += "<td style='width: 160px'>" + rd.movimiento + "</div>";
+                         html += "<td style='width: 100px'>" + rd.numero + "</div>";
+                         html += "<td style='width: 30px'>" + rd.tipo + "</div>";
+                         html += "<td style='width: 30px'>" + rd.cantidad.ToString("N0") + "</div>";
+                         html += "<td style='width: 30px'>" + (suma += rd.cantidad).ToString("N0") + "</div>";
+                         html += "</tr>";
                         
                      }
-                     html += "</div>";
+                     html += "</table>";
+                     
                  }
 
-                 this.informe.InnerHtml = html;
+                 this.movimientos.InnerHtml = html;
 
                
 
@@ -190,7 +197,7 @@ namespace WebApplication1
                 string myScript2 = "alertify.error('message." + ex.Message + "')";
                 ScriptManager.RegisterClientScriptBlock(Page, Page.GetType(),
                                 Guid.NewGuid().ToString(), myScript2, true);
-                return;
+                //return;
                 //throw;
             }
         } 

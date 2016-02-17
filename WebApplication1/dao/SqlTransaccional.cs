@@ -78,14 +78,23 @@ public class SqlTransaccional
 
       }
     public Object consulta_escalar(string strSql)
+    {
+        try
         {
             Object resultado;
 
             cmd.CommandText = strSql;
-            
+
             resultado = cmd.ExecuteScalar();
             //cerrar_conexion();
             return resultado;
+        }
+        catch (Exception)
+        {
+            
+            throw;
+        }
+            
             
         }
     public bool  consulta_nonquery(ref string strSql)
