@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using informe_stock_layers.dao;
 using System.Data;
+using System.Diagnostics;
 
 
 namespace informe_stock_layers.bss
@@ -29,9 +30,59 @@ namespace informe_stock_layers.bss
     {
         private  SqlTransaccional miSql;// = new SqlTransaccional(false);
         public consultaBss(string conexionStr){
-            miSql = new SqlTransaccional(false,conexionStr);
+            try
+            {
+                miSql = new SqlTransaccional(false, conexionStr);
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            
         }
-        public List<Resumen> consultarResumen(DateTime fecha_inicio, DateTime fecha_fin, string[] codigos)
+
+        public string strConsultarResumen(DateTime fecha_inicio, DateTime fecha_fin, string[] codigos)
+        {
+            try
+            {
+                List<Resumen> miResumen = consultarResumen(fecha_inicio, fecha_fin, codigos);
+
+                string html = "";
+
+                foreach (Resumen r in miResumen)
+                {
+                    Debug.Print("html:" + r.codigo);
+                    html += "<div class='row'>";
+                    html += "<div class='col-sm-3'><strong>" + r.codigo + "</strong></div><div class='col-sm-9'>" + r.articulo + "</div>";
+                    html += "</div>";
+                    decimal suma = 0;
+                    html += "<table border='0'>";
+                    foreach (ResumenDetalle rd in r.detalle)
+                    {
+                        html += "<tr>";
+                        html += "<td style='width: 100px'>" + rd.fecha.ToShortDateString() + "</div>";
+                        html += "<td style='width: 160px'>" + rd.movimiento + "</div>";
+                        html += "<td style='width: 100px'>" + rd.numero + "</div>";
+                        html += "<td style='width: 30px'>" + rd.tipo + "</div>";
+                        html += "<td style='width: 30px'>" + rd.cantidad.ToString("N0") + "</div>";
+                        html += "<td style='width: 30px'>" + (suma += rd.cantidad).ToString("N0") + "</div>";
+                        html += "</tr>";
+                    }
+                    html += "</table>";
+                    
+                }
+                return html;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            
+        }
+
+        private List<Resumen> consultarResumen(DateTime fecha_inicio, DateTime fecha_fin, string[] codigos)
         {
             try
             {
@@ -44,6 +95,7 @@ namespace informe_stock_layers.bss
                     if (c!=null && c!="")
                     {
                         resumen = new Resumen { codigo = c };
+                        Debug.Print("consulta:" + resumen.codigo);
                         resumenDetalle = consultarDetalle(fecha_inicio, fecha_fin, c, out resumen.articulo, miSql);
                         if (resumen.articulo != "")
                         {

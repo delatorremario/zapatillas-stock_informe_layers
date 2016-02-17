@@ -24,7 +24,7 @@ namespace WebApplication1
                     var conexs = ConfigurationManager.ConnectionStrings;
                     foreach (ConnectionStringSettings c in conexs)
                     {
-                        ListItem item = new ListItem(c.Name,c.ToString());
+                        ListItem item = new ListItem(c.ToString(),c.Name);
                         rbConexiones.Items.Add(item);
                     }
                 }
@@ -76,7 +76,7 @@ namespace WebApplication1
 
                         //' Notify the user of the name the file
                         //' was saved under.
-                        UploadStatusLabel.Text = "Su archivo se grabó correctamente";// '"Your file was saved as " & fileName;
+                        UploadStatusLabel.Text = "Su archivo se grabó correctamente.<br>" + savePath;// '"Your file was saved as " & fileName;
 
                         //string archivo = savePath; // 'Server.MapPath("agenda.xlsx") 'Asignamos la ruta
                         Session["archivo"]=savePath;
@@ -99,6 +99,8 @@ namespace WebApplication1
             }
             catch (Exception ex)
             {
+                this.movimientos.InnerHtml = "";
+                this.movimientos.InnerHtml = "Error: " + ex.Message;
                 string myScript2 = "alertify.error('message."+ex.Message+"')";
                 ScriptManager.RegisterClientScriptBlock(Page, Page.GetType(),
                                 Guid.NewGuid().ToString(), myScript2, true);
@@ -147,20 +149,22 @@ namespace WebApplication1
                                         .Select(row=>row["COD_ARTICU"].ToString())
                                         .ToArray();
 
-                 Debug.WriteLine(arr.ToString());
+                 Debug.Print(arr.ToString());
 
                  DateTime fini = DateTime.Parse (this.finicio.Text);
                  DateTime ffin = Convert.ToDateTime (this.ffin.Text);
-                 string conexionStr = rbConexiones.SelectedValue;
-                 lbSeleccionada.Text = rbConexiones.SelectedItem.ToString();
+                 string conexionStr = rbConexiones.SelectedItem.ToString();// rbConexiones.SelectedValue;
+                 lbSeleccionada.Text = rbConexiones.SelectedValue;// rbConexiones.SelectedItem.ToString();
                  consultaBss consultaBss = new consultaBss(conexionStr);
-                 List<Resumen> miResumen = consultaBss.consultarResumen(fini, ffin, arr);
+                 this.movimientos.InnerHtml = consultaBss.strConsultarResumen(fini, ffin, arr);
+                 /*List<Resumen> miResumen = consultaBss.consultarResumen(fini, ffin, arr);
 
-                 string html = "";
+                 string html = "Datos procesados.";
 
                  foreach (Resumen r in miResumen)
-                 {   html+="<div class='row'>";
-                    html += "<div class='col-sm-2'><strong>" + r.codigo + "</strong></div><div class='col-sm-10'>" + r.articulo + "</div>";
+                 {   
+                    html+="<div class='row'>";
+                    html += "<div class='col-sm-3'><strong>" + r.codigo + "</strong></div><div class='col-sm-9'>" + r.articulo + "</div>";
                     html += "</div>";
                     decimal suma = 0;
                     html += "<table border='0'>";
@@ -181,20 +185,18 @@ namespace WebApplication1
                  }
 
                  this.movimientos.InnerHtml = html;
+                  */
 
                
 
-                /*foreach (DataRow dr in ds.Tables[0].Rows)
-                {
-                    Debug.WriteLine(dr["COD_ARTICU"].ToString());
-                }*/
 
                 
             }
             catch (Exception ex)
             {
 
-                string myScript2 = "alertify.error('message." + ex.Message + "')";
+                this.movimientos.InnerHtml = "Error: " + ex.Message;
+                string myScript2 = "alert('message." + ex.Message + "')";
                 ScriptManager.RegisterClientScriptBlock(Page, Page.GetType(),
                                 Guid.NewGuid().ToString(), myScript2, true);
                 //return;
